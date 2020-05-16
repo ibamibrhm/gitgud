@@ -3,6 +3,8 @@ import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import Project from '../pages/Project';
 import mockResponse from '../utils/mockResponse';
+import { Store } from '../store/index';
+import { initialState } from '../store/reducers/githubReducer';
 
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
@@ -12,7 +14,11 @@ jest.mock('react-router-dom', () => ({
 }));
 
 test('renders Project page', () => {
-  const { getByTestId } = render(<Project />);
+  const { getByTestId } = render(
+    <Store.Provider value={{ state: initialState, dispatch: () => jest.fn() }}>
+      <Project />
+    </Store.Provider>
+  );
   const searchForm = getByTestId('search-form');
   expect(searchForm).toBeInTheDocument();
 });
@@ -26,26 +32,15 @@ test('renders projects and fetch success', async () => {
   jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve(mockResponse(200, null, JSON.stringify(fakeData))));
 
   await act(async () => {
-    render(<Project />);
+    render(
+      <Store.Provider value={{ state: initialState, dispatch: () => jest.fn() }}>
+        <Project />
+      </Store.Provider>
+    );
   });
 
   const mockResponseValue = await global.fetch.mock.results[0].value;
   expect(mockResponseValue.ok).toBeTruthy();
-  expect(global.fetch).toHaveBeenCalledTimes(1);
-  expect(global.fetch).toHaveBeenCalledWith('https://api.github.com/repos/ibamibrhm/gitgud/readme');
-
-  global.fetch.mockRestore();
-});
-
-test('renders projects and fetch failed', async () => {
-  jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve(mockResponse(404, 'Not Found', null)));
-
-  await act(async () => {
-    render(<Project />);
-  });
-
-  const mockResponseValue = await global.fetch.mock.results[0].value;
-  expect(mockResponseValue.ok).toBeFalsy();
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenCalledWith('https://api.github.com/repos/ibamibrhm/gitgud/readme');
 

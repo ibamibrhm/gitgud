@@ -39,7 +39,7 @@
   },
   "jest": {
     "coveragePathIgnorePatterns": [
-      "src/index.jsx"
+      "src/index.js"
     ]
   }
 }

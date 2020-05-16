@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import Navbar from '../components/Navbar';
 import { useParams, Link, useRouteMatch } from 'react-router-dom';
+import { Store } from '../store/index';
+import { fetchRepos } from '../store/actions/githubAction';
 
 const UserProjects = () => {
-  const [repos, setRepos] = useState([]);
+  const {
+    state: { repos },
+    dispatch,
+  } = useContext(Store);
+
   const { username } = useParams();
   const { url } = useRouteMatch();
 
   useEffect(() => {
-    const fetchRepos = async () => {
-      const resp = await fetch(`https://api.github.com/users/${username}/repos?sort=updated`);
-      if (!resp.ok) {
-        alert(resp.statusText);
-        return;
-      }
-      const data = await resp.json();
-      setRepos(data);
-    };
-    fetchRepos();
-  }, [username]);
+    dispatch(fetchRepos(username));
+  }, [username, dispatch]);
 
   return (
     <div>
