@@ -14,7 +14,7 @@ const Project = () => {
 
   useEffect(() => {
     dispatch(fetchMarkdown(username, project));
-  }, [username, project, dispatch]);
+  }, []);
 
   return (
     <div>

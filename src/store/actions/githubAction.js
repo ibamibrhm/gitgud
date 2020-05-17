@@ -4,8 +4,7 @@ import Showdown from 'showdown';
 export const fetchRepos = async (username) => {
   const resp = await fetch(`https://api.github.com/users/${username}/repos?sort=updated`);
   if (!resp.ok) {
-    alert(resp.statusText);
-    throw new ErrorHandler(resp, 'FETCH_REPOS_FAILED');
+    throw new ErrorHandler(resp.statusText, 'FETCH_REPOS_FAILED');
   }
   const data = await resp.json();
   return {
@@ -17,7 +16,6 @@ export const fetchRepos = async (username) => {
 export const fetchMarkdown = async (username, project) => {
   const resp = await fetch(`https://api.github.com/repos/${username}/${project}/readme`);
   if (!resp.ok) {
-    alert(resp.statusText);
     throw new ErrorHandler(resp.statusText, 'FETCH_MARKDOWN_FAILED');
   }
   const data = await resp.json();

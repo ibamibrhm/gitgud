@@ -6,7 +6,7 @@ import { fetchRepos } from '../store/actions/githubAction';
 
 const UserProjects = () => {
   const {
-    state: { repos },
+    state: { repos, error },
     dispatch,
   } = useContext(Store);
 
@@ -15,18 +15,22 @@ const UserProjects = () => {
 
   useEffect(() => {
     dispatch(fetchRepos(username));
-  }, [username, dispatch]);
+  }, []);
 
   return (
     <div>
       <Navbar title={`${username} projects`} />
-      <ul>
-        {repos.map((repo) => (
-          <li key={repo.id} data-testid="list-project">
-            <Link to={`${url}/${repo.name}`}>{repo.name}</Link>
-          </li>
-        ))}
-      </ul>
+      {error ? (
+        error
+      ) : (
+        <ul>
+          {repos.map((repo) => (
+            <li key={repo.id} data-testid="list-project">
+              <Link to={`${url}/${repo.name}`}>{repo.name}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

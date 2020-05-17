@@ -1,6 +1,7 @@
 export const initialState = {
   repos: [],
   readme: '',
+  error: null,
 };
 
 const githubReducer = (state, action) => {
@@ -9,11 +10,13 @@ const githubReducer = (state, action) => {
       return {
         ...state,
         repos: action.payload,
+        error: null,
       };
     case 'FETCH_REPOS_FAILED': {
       return {
         ...state,
         repos: [],
+        error: action.error,
       };
     }
     case 'FETCH_MARKDOWN_SUCCESS': {
