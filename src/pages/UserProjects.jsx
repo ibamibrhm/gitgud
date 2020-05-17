@@ -15,7 +15,7 @@ const UserProjects = () => {
 
   useEffect(() => {
     dispatch(fetchRepos(username));
-  }, []);
+  }, [username]);
 
   return (
     <div>
